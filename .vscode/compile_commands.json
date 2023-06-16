@@ -1,0 +1,6 @@
+[
+{
+  "directory": "c:\\Software\\Project\\C\\staff",
+  "arguments": ["clang.exe", "-c", "-Qunused-arguments", "-m64", "-fexceptions", "-fcxx-exceptions", "-o", "build\\.objs\\staff\\windows\\x64\\src\\main.cpp.obj", "src\\main.cpp"],
+  "file": "src\\main.cpp"
+}]
