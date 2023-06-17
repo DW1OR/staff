@@ -9,8 +9,6 @@ int main(int argc, char **argv) {
 
   int flag = -1;
   while (flag != 0) {
-    system("cls");
-
     // 显示菜单
     wm.showMenu();
     cin >> flag;
@@ -20,6 +18,7 @@ int main(int argc, char **argv) {
       wm.exitSystem();
       break;
     case 1: // 1、增加职工信息
+      wm.addEmp();
       break;
     case 2: // 2、显示职工信息
       break;
@@ -39,6 +38,7 @@ int main(int argc, char **argv) {
     }
 
     system("pause");
+    system("cls");
   }
 
   return 0;
