@@ -118,7 +118,7 @@ void WorkerManager::showMenu() {
   cout << "4、修改职工信息" << endl;
   cout << "5、查找职工信息" << endl;
   cout << "6、按照偏好排序" << endl;
-  cout << "7、清空所有文档" << endl;
+  cout << "7、清空文件信息" << endl;
   cout << endl;
   cout << "请输入你的选择：" << endl;
 }
@@ -415,10 +415,60 @@ void WorkerManager::sortEmp() {
     }
 
     this->saveFile();
-    
+
     cout << "排序成功！排序后的结果为：" << endl;
     this->showEmp();
   }
 }
 
-WorkerManager::~WorkerManager() { delete[] m_EmpArray; }
+// 清空文件
+void WorkerManager::cleanFile() {
+  cout << "确认清空文件？" << endl;
+  cout << "1、确认" << endl;
+  cout << "2、返回" << endl;
+
+  int select = 0;
+  cin >> select;
+  while (!(select == 1 || select == 2) || cin.fail()) {
+    cout << "输入有误，请重新输入：" << endl;
+    // 清空cin缓冲区
+    cin.clear();
+    cin.ignore();
+    cin >> select;
+  }
+
+  if (select == 1) {
+    // 清空文件
+    ofstream ofs(FILENAME, ios::trunc);
+    ofs.close();
+
+    if (this->m_EmpArray != NULL) {
+      for (int i = 0; i < this->m_EmpNum; i++) {
+        if (this->m_EmpArray[i] != NULL) {
+          delete this->m_EmpArray[i];
+          this->m_EmpArray[i] = NULL;
+        }
+      }
+
+      delete[] this->m_EmpArray;
+      this->m_EmpArray = NULL;
+      this->m_EmpNum = 0;
+      this->m_FileIsEmpty = true;
+    }
+
+    cout << "清空成功" << endl;
+  }
+}
+
+WorkerManager::~WorkerManager() {
+  if (this->m_EmpArray != NULL) {
+    for (int i = 0; i < this->m_EmpNum; i++) {
+      if (this->m_EmpArray[i] != NULL) {
+        delete this->m_EmpArray[i];
+        this->m_EmpArray[i] = NULL;
+      }
+    }
+  }
+  delete[] this->m_EmpArray;
+  this->m_EmpArray = NULL;
+}

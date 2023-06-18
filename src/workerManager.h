@@ -45,6 +45,9 @@ public:
   // 员工排序
   void sortEmp();
 
+  // 清空文件
+  void cleanFile();
+
   ~WorkerManager();
 
   // 记录职工人数

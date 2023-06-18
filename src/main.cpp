@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
       wm.sortEmp();
       break;
     case 7: // 7、清空所有文档
+      wm.cleanFile();
       break;
     default:
       cout << "输入的选择有误！" << endl;
