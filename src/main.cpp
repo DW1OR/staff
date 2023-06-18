@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
       wm.updateEmp();
       break;
     case 5: // 5、查找职工信息
+      wm.findEmp();
       break;
     case 6: // 6、按照偏好排序
       break;

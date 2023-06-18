@@ -39,6 +39,9 @@ public:
   // 修改职工
   void updateEmp();
 
+  // 查找职工
+  void findEmp();
+
   ~WorkerManager();
 
   // 记录职工人数

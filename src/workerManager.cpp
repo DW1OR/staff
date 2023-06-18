@@ -326,4 +326,52 @@ void WorkerManager::updateEmp() {
   }
 }
 
+// 查找职工
+void WorkerManager::findEmp() {
+  if (this->m_FileIsEmpty) {
+    cout << "文件不存在或者记录为空" << endl;
+  } else {
+    cout << "请输入查找的方式：" << endl;
+    cout << "1、按职工标号查找" << endl;
+    cout << "2、按职工姓名查找" << endl;
+
+    int select = 0;
+    cin >> select;
+    while (!(select == 1 || select == 2) || cin.fail()) {
+      cout << "输入有误，请重新输入：" << endl;
+      // 清空cin缓冲区
+      cin.clear();
+      cin.ignore();
+      cin >> select;
+    }
+
+    if (select == 1) {
+      int id;
+      cout << "请输入查找的职工编号：" << endl;
+      cin >> id;
+
+      int index = this->isExist(id);
+      if (index != -1) {
+        cout << "查找成功，该职工信息如下：" << endl;
+        this->m_EmpArray[index]->showInfo();
+        return;
+      }
+    } else if (select == 2) {
+      string name;
+      cout << "请输入查找的职工姓名：" << endl;
+      cin >> name;
+
+      for (int i = 0; i < m_EmpNum; i++) {
+        if (this->m_EmpArray[i]->m_Name == name) {
+          cout << "查找成功，该职工信息如下：" << endl;
+          this->m_EmpArray[i]->showInfo();
+          return;
+        }
+      }
+    }
+
+    cout << "查找失败" << endl;
+  }
+}
+
 WorkerManager::~WorkerManager() { delete[] m_EmpArray; }
