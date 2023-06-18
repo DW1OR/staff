@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
       wm.delEmp();
       break;
     case 4: // 4、修改职工信息
+      wm.updateEmp();
       break;
     case 5: // 5、查找职工信息
       break;

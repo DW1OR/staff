@@ -36,6 +36,9 @@ public:
   // 删除职工
   void delEmp();
 
+  // 修改职工
+  void updateEmp();
+
   ~WorkerManager();
 
   // 记录职工人数
