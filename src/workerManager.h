@@ -42,6 +42,9 @@ public:
   // 查找职工
   void findEmp();
 
+  // 员工排序
+  void sortEmp();
+
   ~WorkerManager();
 
   // 记录职工人数

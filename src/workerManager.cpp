@@ -332,7 +332,7 @@ void WorkerManager::findEmp() {
     cout << "文件不存在或者记录为空" << endl;
   } else {
     cout << "请输入查找的方式：" << endl;
-    cout << "1、按职工标号查找" << endl;
+    cout << "1、按职工编号查找" << endl;
     cout << "2、按职工姓名查找" << endl;
 
     int select = 0;
@@ -371,6 +371,53 @@ void WorkerManager::findEmp() {
     }
 
     cout << "查找失败" << endl;
+  }
+}
+
+// 员工排序
+void WorkerManager::sortEmp() {
+  if (this->m_FileIsEmpty) {
+    cout << "文件不存在或者记录为空" << endl;
+  } else {
+    cout << "请输入排序的方式：" << endl;
+    cout << "1、按职工编号进行升序" << endl;
+    cout << "2、按职工编号进行降序" << endl;
+
+    int select = 0;
+    cin >> select;
+    while (!(select == 1 || select == 2) || cin.fail()) {
+      cout << "输入有误，请重新输入：" << endl;
+      // 清空cin缓冲区
+      cin.clear();
+      cin.ignore();
+      cin >> select;
+    }
+
+    for (int i = 0; i < m_EmpNum; i++) {
+      int minOrMax = i;
+      for (int j = i + 1; j < this->m_EmpNum; j++) {
+        if (select == 1) { // 升序
+          if (this->m_EmpArray[minOrMax]->m_Id > this->m_EmpArray[j]->m_Id) {
+            minOrMax = j;
+          }
+        } else { // 降序
+          if (this->m_EmpArray[minOrMax]->m_Id < this->m_EmpArray[j]->m_Id) {
+            minOrMax = j;
+          }
+        }
+      }
+
+      if (i != minOrMax) {
+        Worker *temp = this->m_EmpArray[i];
+        this->m_EmpArray[i] = this->m_EmpArray[minOrMax];
+        this->m_EmpArray[minOrMax] = temp;
+      }
+    }
+
+    this->saveFile();
+    
+    cout << "排序成功！排序后的结果为：" << endl;
+    this->showEmp();
   }
 }
 
