@@ -3,21 +3,115 @@
 #include "employee.h"
 #include "manager.h"
 #include <cstddef>
+#include <fstream>
 #include <iostream>
+#include <process.h>
 
 using namespace std; // 使用标准命名空间
 
 WorkerManager::WorkerManager() {
-  // 初始化属性
-  this->m_EmpNum = 0;
+  ifstream ifs;
+  // 读文件
+  ifs.open(FILENAME, ios::in);
 
-  this->m_EMpArray = NULL;
+  if (!ifs.is_open()) {
+    // cout << "文件不存在" << endl;
+    //  初始化属性
+    this->m_EmpNum = 0;
+    this->m_EmpArray = NULL;
+    this->m_FileIsEmpty = true;
+    ifs.close();
+    return;
+  }
+
+  char ch;
+  ifs >> ch;
+  if (ifs.eof()) {
+    // cout << "文件为空" << endl;
+    //  初始化属性
+    this->m_EmpNum = 0;
+    this->m_EmpArray = NULL;
+    this->m_FileIsEmpty = true;
+    ifs.close();
+    return;
+  }
+
+  // 读取文件中数据
+  int num = this->getEmpNum();
+  cout << "职工人数为：" << num << endl;
+  this->m_EmpNum = num;
+  this->m_EmpArray = new Worker *[this->m_EmpNum];
+  this->initEmp();
+}
+
+// 保存文件
+void WorkerManager::saveFile() {
+  ofstream ofs;
+  ofs.open(FILENAME, ios::out | ios::trunc);
+
+  // 将每个人数据写入文件中
+  for (int i = 0; i < this->m_EmpNum; i++) {
+    ofs << this->m_EmpArray[i]->m_Id << " " << this->m_EmpArray[i]->m_Name
+        << " " << this->m_EmpArray[i]->m_DeptId << " " << endl;
+  }
+
+  ofs.close();
+}
+
+// 统计文件中人数
+int WorkerManager::getEmpNum() {
+  ifstream ifs;
+  ifs.open(FILENAME, ios::in);
+
+  int id;
+  string name;
+  int deptId;
+
+  int num = 0;
+  // ifs遇到空格会停止读取
+  while (ifs >> id && ifs >> name && ifs >> deptId) {
+    num++;
+  }
+
+  return num;
+}
+
+// 初始化员工
+void WorkerManager::initEmp() {
+  ifstream ifs;
+  ifs.open(FILENAME, ios::in);
+
+  int id;
+  string name;
+  int deptId;
+
+  int index = 0;
+  while (ifs >> id && ifs >> name && ifs >> deptId) {
+    Worker *worker = NULL;
+    switch (deptId) {
+    case 1:
+      worker = new Employee(id, name, deptId);
+      break;
+    case 2:
+      worker = new Manager(id, name, deptId);
+      break;
+    case 3:
+      worker = new Boss(id, name, deptId);
+      break;
+    default:
+      break;
+    }
+
+    this->m_EmpArray[index++] = worker;
+  }
+
+  ifs.close();
 }
 
 // 展示菜单
 void WorkerManager::showMenu() {
   cout << "欢迎使用职工管理系统" << endl;
-  cout << "0、推出管理程序" << endl;
+  cout << "0、退出管理程序" << endl;
   cout << "1、增加职工信息" << endl;
   cout << "2、显示职工信息" << endl;
   cout << "3、删除离职职工" << endl;
@@ -50,9 +144,9 @@ void WorkerManager::addEmp() {
     Worker **newSpace = new Worker *[newSize * sizeof(Worker)];
 
     // 将原来空间下的数据，拷贝到新的空间下
-    if (this->m_EMpArray != NULL) {
+    if (this->m_EmpArray != NULL) {
       for (int i = 0; i < this->m_EmpNum; i++) {
-        newSpace[i] = this->m_EMpArray[i];
+        newSpace[i] = this->m_EmpArray[i];
       }
     }
 
@@ -97,17 +191,23 @@ void WorkerManager::addEmp() {
       }
 
       // 将新建的职工添加到数组中
-      newSpace[this->m_EmpNum + 1] = worker;
+      newSpace[this->m_EmpNum + i] = worker;
     }
 
     // 释放原有的空间
-    delete[] this->m_EMpArray;
+    delete[] this->m_EmpArray;
 
     // 更新新空间的指向
-    this->m_EMpArray = newSpace;
+    this->m_EmpArray = newSpace;
 
     // 更新新的职工人数
     this->m_EmpNum = newSize;
+
+    // 更新职工不为空标志
+    this->m_FileIsEmpty = false;
+
+    // 保存数据到文件中
+    this->saveFile();
 
     cout << "成功添加" << addNum << "名新员工" << endl;
   } else {
@@ -115,4 +215,15 @@ void WorkerManager::addEmp() {
   }
 }
 
-WorkerManager::~WorkerManager() {}
+// 显示职工
+void WorkerManager::showEmp() {
+  if (this->m_FileIsEmpty) {
+    cout << "文件不存在或记录为空" << endl;
+  } else {
+    for (int i = 0; i < m_EmpNum; i++) {
+      this->m_EmpArray[i]->showInfo();
+    }
+  }
+}
+
+WorkerManager::~WorkerManager() { delete[] m_EmpArray; }

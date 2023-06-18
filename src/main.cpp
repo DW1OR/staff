@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
       wm.addEmp();
       break;
     case 2: // 2、显示职工信息
+      wm.showEmp();
       break;
     case 3: // 3、删除离职职工
       break;
